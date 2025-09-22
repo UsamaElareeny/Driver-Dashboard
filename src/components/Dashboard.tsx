@@ -1,19 +1,164 @@
 import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  Route,
-  Calendar,
-  Search,
-  Filter,
-  UserX,
-  Users,
-} from "lucide-react";
+import { Plus, Route, Calendar, Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Drive, Route, initialDrivers, initialRoutes } from "./mockData";
+import { useState } from "react";
+import { RouteCard } from "./RouteCard";
+interface Driver {
+  id: string;
+  name: string;
+  availability: "Available" | "Assigned" | "Unavailable";
+  photo?: string;
+  assignedRoute?: string;
+}
+interface Route {
+  id: string;
+  name: string;
+  startLocation: string;
+  endLocation: string;
+  time: string;
+  assignedDriverId?: string;
+}
+
+// Mock data with Egyptian names and routes
+const initialDrivers: Driver[] = [
+  { id: "1", name: "Ahmed Hassan", availability: "Available" },
+  {
+    id: "2",
+    name: "Youssef Mohamed",
+    availability: "Assigned",
+    assignedRoute: "1",
+  },
+  { id: "3", name: "Omar Ali", availability: "Available" },
+  { id: "4", name: "Mahmoud Ibrahim", availability: "Unavailable" },
+];
+
+const initialRoutes: Route[] = [
+  {
+    id: "1",
+    name: "Cairo Express",
+    startLocation: "Cairo",
+    endLocation: "Alexandria",
+    time: "08:00",
+    assignedDriverId: "2",
+  },
+  {
+    id: "2",
+    name: "Giza Luxury",
+    startLocation: "Giza",
+    endLocation: "Luxor",
+    time: "10:30",
+  },
+  {
+    id: "3",
+    name: "Capital Route",
+    startLocation: "Cairo",
+    endLocation: "Aswan",
+    time: "14:00",
+  },
+  {
+    id: "4",
+    name: "Port Connection",
+    startLocation: "Port Said",
+    endLocation: "Ismailia",
+    time: "16:45",
+  },
+];
+
 function Dashboard() {
+  const [drivers, setDrivers] = useState<Driver[]>(initialDrivers);
+  const [routes, setRoutes] = useState<Route[]>(initialRoutes);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<
+    "All" | "Assigned" | "Unassigned"
+  >("All");
+  const [activeModal, setActiveModal] = useState<
+    "driver" | "route" | "calendar" | "assignment" | "driverFilter" | null
+  >(null);
+  const [selectedRouteForAssignment, setSelectedRouteForAssignment] =
+    useState<RouteInterface | null>(null);
+
+  const [driverFilters, setDriverFilters] = useState<{
+    availibility: string[];
+    searchTerm: string;
+  }>({ availibility: [], searchTerm: "" });
+
+  const filteredDrivers = drivers.filter((d) => {
+    const matchesSearch =
+      d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      d.name.toLowerCase().includes(driverFilters.searchTerm.toLowerCase());
+
+    const matchesAvailibility =
+      driverFilters.availibility.length === 0 ||
+      driverFilters.availibility.includes(d.availability);
+
+    return matchesSearch && matchesAvailibility;
+  });
+
+  const filteredRoutes = routes.filter((r) => {
+    const matchesSearch =
+      r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.startLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.endLocation.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (filterStatus === "All") return matchesSearch;
+    if (filterStatus === "Assigned") return matchesSearch && r.assignedDriverId;
+    if (filterStatus === "Unassigned")
+      return matchesSearch && !r.assignedDriverId;
+    return matchesSearch;
+  });
+  const getDriverById = (id: string) => drivers.find((d) => d.id == id);
+
+  const handleAddDriver = (driverData: Omit<Driver, "id">) => {
+    const newDriver: Driver = {
+      ...driverData,
+      id: (drivers.length + 1).toString(),
+    };
+    setDrivers([...drivers, newDriver]);
+    setActiveModal(null);
+  };
+  const handleAddRoute = (routeData: Omit<Route, "id">) => {
+    const newRoute: Route = {
+      ...routeData,
+      id: (routes.length + 1).toString(),
+    };
+    setRoutes([...routes, newRoute]);
+    setActiveModal(null);
+  };
+  const handleAssignDriver = (routeId: string, driverId: string) => {
+    setRoutes(
+      routes.map((r) =>
+        r.id === routeId ? { ...r, assignedDriverId: driverId } : r
+      )
+    );
+    setDrivers(
+      drivers.map((d) =>
+        d.id == driverId
+          ? { ...d, availability: "Assigned", assignedRoute: routeId }
+          : d
+      )
+    );
+  };
+
+  const handleUnassignDriver = (routeId: string) => {
+    const route = routes.find((r) => r.id == routeId);
+    if (route?.assignedDriverId) {
+      setRoutes(
+        routes.map((r) =>
+          r.id === routeId ? { ...r, assignedDriverId: undefined } : r
+        )
+      );
+      setDrivers(
+        drivers.map((d) =>
+          d.id === route.assignedDriverId
+            ? { ...d, availability: "Available", assignedRoute: undefined }
+            : d
+        )
+      );
+    }
+  };
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -31,8 +176,8 @@ function Dashboard() {
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 justify-center">
           <Button
+            onClick={() => setActiveModal("driver")}
             className="gradient-primary btn-ripple hover-elevate shadow-primary"
-            // onClick={() => EXAMPLE()}
             variant="default"
             size="lg"
           >
@@ -42,7 +187,7 @@ function Dashboard() {
 
           <Button
             className="gradient-secondary btn-ripple hover-elevate shadow-secondary"
-            // onClick={() => EXAMPLE()}
+            onClick={() => setActiveModal("route")}
             variant="secondary"
             size="lg"
           >
@@ -51,13 +196,13 @@ function Dashboard() {
           </Button>
 
           <Button
-            // onClick={}
+            onClick={() => setActiveModal("calendar")}
             variant="outline"
             size="lg"
             className="hover-elevate transition-smooth border-primary/20 hover:border-primary/40"
           >
             <Calendar className="mr-2 h-5 w-5"></Calendar>
-            Calender View
+            Calendar View
           </Button>
         </div>
         {/* Search & Filters */}
@@ -67,29 +212,29 @@ function Dashboard() {
             <Input
               placeholder="Search drives and routes..."
               className="pl-10 bg-card border-border/50 focus:border-primary/50 transition-smooth"
-              //   value={}
-              //   onChange={}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="flex gap-2">
             <Button
-              // variant={}
-              // onClick={}
+              variant={filterStatus === "All" ? "default" : "outline"}
               className="btn-ripple"
+              onChange={() => setFilterStatus("All")}
             >
               All
             </Button>
             <Button
-              // variant={}
-              // onClick={}
+              variant={filterStatus === "Assigned" ? "default" : "outline"}
               className="btn-ripple"
+              onChange={() => setFilterStatus("Assigned")}
             >
               Assigned
             </Button>
             <Button
-              // variant={}
-              // onClick={}
+              variant={filterStatus === "Unassigned" ? "default" : "outline"}
               className="btn-ripple"
+              onChange={() => setFilterStatus("Unassigned")}
             >
               Unassigned
             </Button>
@@ -102,70 +247,19 @@ function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
                 <Route className="h-6 w-6 text-primary" />
-                Routes 14
+                Routes ({filteredRoutes.length})
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 rounded-lg bg-background-secondary border border-border/30 hover:border-primary/30 transition-smooth hover-elevate">
-                <div className="flex items-center justify-between mb-3">
-                  <h3>Route Name</h3>
-                  <Badge variant="default" className="gradient-success">
-                    Assigned
-                  </Badge>
-                </div>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <p>Giza → Cairo</p>
-                  <p>Departure: 07:20</p>
-                </div>
-                {true ? (
-                  <div className="mt-3 space-y-2">
-                    <div className="flex items-center gap-3 p-2 rounded-md bg-success/10">
-                      <Avatar className="h-8 w-8 avatar-hover">
-                        <AvatarImage />
-                        <AvatarFallback className="gradient-primary text-primary-foreground text-xs">
-                          {"Usama Mohammed"
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm font-medium flex-1">
-                        Usama Mohammed
-                      </span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 hover:border-destructive/50 hover:text-destructive btn-ripple"
-                        //   onClick={}
-                      >
-                        Unassign
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 hover:border-primary/50 btn-ripple"
-                        //   onClick={}
-                      >
-                        Reassign
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    // onClick={() => {
-                    //   setSelectedRouteForAssignment(route);
-                    //   setActiveModal("assignment");
-                    // }}
-                    className="mt-3 w-full btn-ripple hover:border-primary/50"
-                  >
-                    Assign Driver
-                  </Button>
-                )}
-              </div>
+              {filteredRoutes.map((r) => (
+                <RouteCard
+                  route={r}
+                  getDriverById={getDriverById}
+                  handleUnassignDriver={handleUnassignDriver}
+                  setSelectedRouteForAssignment={setSelectedRouteForAssignment}
+                  setActiveModal={setActiveModal}
+                />
+              ))}
             </CardContent>
           </Card>
           {/* Drivers */}
