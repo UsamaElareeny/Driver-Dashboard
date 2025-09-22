@@ -7,6 +7,7 @@ import { useState } from "react";
 import RouteCard from "./RouteCard";
 import DriverCard from "./DriverCard";
 import DriverForm from "./DriverForm";
+import RouteForm from "./RouteForm";
 
 interface Driver {
   id: string;
@@ -294,6 +295,12 @@ function Dashboard() {
         {activeModal === "driver" && (
           <DriverForm
             onSubmit={handleAddDriver}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
+        {activeModal === "route" && (
+          <RouteForm
+            onSubmit={handleAddRoute}
             onClose={() => setActiveModal(null)}
           />
         )}
