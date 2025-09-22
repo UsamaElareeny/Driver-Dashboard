@@ -12,8 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { spawn } from "child_process";
-
+import { Drive, Route, initialDrivers, initialRoutes } from "./mockData";
 function Dashboard() {
   return (
     <div className="min-h-screen bg-background p-6">
