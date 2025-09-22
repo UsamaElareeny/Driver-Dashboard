@@ -1,0 +1,343 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@layer base {
+  :root {
+    /* Modern gradient background system */
+    --background: 240 10% 3.9%;
+    --background-secondary: 240 3.7% 15.9%;
+    --foreground: 0 0% 98%;
+
+    /* Vibrant card system */
+    --card: 240 10% 3.9%;
+    --card-secondary: 240 3.7% 15.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Vibrant gradient primary system */
+    --primary: 259 94% 51%;
+    --primary-light: 268 100% 74%;
+    --primary-dark: 250 84% 44%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Beautiful secondary gradient */
+    --secondary: 197 96% 51%;
+    --secondary-light: 195 100% 69%;
+    --secondary-dark: 199 89% 48%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* Success gradient */
+    --success: 142 76% 36%;
+    --success-light: 142 69% 58%;
+    --success-foreground: 0 0% 98%;
+
+    /* Warning gradient */
+    --warning: 38 92% 50%;
+    --warning-light: 48 96% 53%;
+    --warning-foreground: 0 0% 98%;
+
+    /* Danger gradient */
+    --danger: 0 84% 60%;
+    --danger-light: 0 93% 73%;
+    --danger-foreground: 0 0% 98%;
+
+    /* Muted system */
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 259 94% 51%;
+
+    --radius: 0.75rem;
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Beautiful gradients */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--primary-light))
+    );
+    --gradient-secondary: linear-gradient(
+      135deg,
+      hsl(var(--secondary)),
+      hsl(var(--secondary-light))
+    );
+    --gradient-success: linear-gradient(
+      135deg,
+      hsl(var(--success)),
+      hsl(var(--success-light))
+    );
+    --gradient-warning: linear-gradient(
+      135deg,
+      hsl(var(--warning)),
+      hsl(var(--warning-light))
+    );
+    --gradient-danger: linear-gradient(
+      135deg,
+      hsl(var(--danger)),
+      hsl(var(--danger-light))
+    );
+    --gradient-background: linear-gradient(
+      135deg,
+      hsl(var(--background)),
+      hsl(var(--background-secondary))
+    );
+    --gradient-card: linear-gradient(
+      135deg,
+      hsl(var(--card)),
+      hsl(var(--card-secondary))
+    );
+
+    /* Shadows with color */
+    --shadow-primary: 0 10px 30px -5px hsl(var(--primary) / 0.3);
+    --shadow-secondary: 0 10px 30px -5px hsl(var(--secondary) / 0.3);
+    --shadow-success: 0 10px 30px -5px hsl(var(--success) / 0.3);
+    --shadow-warning: 0 10px 30px -5px hsl(var(--warning) / 0.3);
+    --shadow-danger: 0 10px 30px -5px hsl(var(--danger) / 0.3);
+    --shadow-elegant: 0 20px 40px -10px hsl(0 0% 0% / 0.4);
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    /* This is the line that caused the error. */
+    /* @apply border-border; */
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: var(--gradient-background);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+
+  .gradient-warning {
+    background: var(--gradient-warning);
+  }
+
+  .gradient-danger {
+    background: var(--gradient-danger);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+
+  .shadow-secondary {
+    box-shadow: var(--shadow-secondary);
+  }
+
+  .shadow-success {
+    box-shadow: var(--shadow-success);
+  }
+
+  .shadow-warning {
+    box-shadow: var(--shadow-warning);
+  }
+
+  .shadow-danger {
+    box-shadow: var(--shadow-danger);
+  }
+
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  /* Ripple animation */
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-ripple::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .btn-ripple:active::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Hover elevation */
+  .hover-elevate {
+    transition: var(--transition-smooth);
+  }
+
+  .hover-elevate:hover {
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Smooth modal animations */
+  .modal-backdrop {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .modal-content {
+    animation: slideUp 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -40%) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  /* Avatar animations */
+  .avatar-hover {
+    transition: var(--transition-smooth);
+  }
+
+  .avatar-hover:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-primary);
+  }
+}
+
+/* Animations defined in tailwind.config.ts and now in global.css */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
