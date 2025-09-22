@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import RouteCard from "./RouteCard";
 import DriverCard from "./DriverCard";
+import DriverForm from "./DriverForm";
+
 interface Driver {
   id: string;
   name: string;
@@ -22,7 +24,6 @@ interface Route {
   assignedDriverId?: string;
 }
 
-// Mock data with Egyptian names and routes
 const initialDrivers: Driver[] = [
   { id: "1", name: "Ahmed Hassan", availability: "Available" },
   {
@@ -290,6 +291,12 @@ function Dashboard() {
           </Card>
         </div>
         {/* Modals */}
+        {activeModal === "driver" && (
+          <DriverForm
+            onSubmit={handleAddDriver}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
       </div>
     </div>
   );
