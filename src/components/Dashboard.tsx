@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Plus, Route, Calendar, Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { useState } from "react";
-import { RouteCard } from "./RouteCard";
+import RouteCard from "./RouteCard";
+import DriverCard from "./DriverCard";
 interface Driver {
   id: string;
   name: string;
@@ -78,7 +78,7 @@ function Dashboard() {
     "driver" | "route" | "calendar" | "assignment" | "driverFilter" | null
   >(null);
   const [selectedRouteForAssignment, setSelectedRouteForAssignment] =
-    useState<RouteInterface | null>(null);
+    useState<Route | null>(null);
 
   const [driverFilters, setDriverFilters] = useState<{
     availibility: string[];
@@ -220,21 +220,21 @@ function Dashboard() {
             <Button
               variant={filterStatus === "All" ? "default" : "outline"}
               className="btn-ripple"
-              onChange={() => setFilterStatus("All")}
+              onClick={() => setFilterStatus("All")}
             >
               All
             </Button>
             <Button
               variant={filterStatus === "Assigned" ? "default" : "outline"}
               className="btn-ripple"
-              onChange={() => setFilterStatus("Assigned")}
+              onClick={() => setFilterStatus("Assigned")}
             >
               Assigned
             </Button>
             <Button
               variant={filterStatus === "Unassigned" ? "default" : "outline"}
               className="btn-ripple"
-              onChange={() => setFilterStatus("Unassigned")}
+              onClick={() => setFilterStatus("Unassigned")}
             >
               Unassigned
             </Button>
@@ -253,6 +253,7 @@ function Dashboard() {
             <CardContent className="space-y-4">
               {filteredRoutes.map((r) => (
                 <RouteCard
+                  key={r.id}
                   route={r}
                   getDriverById={getDriverById}
                   handleUnassignDriver={handleUnassignDriver}
@@ -267,13 +268,13 @@ function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between text-xl">
                 <div className="flex items-center gap-2">
-                  <Users className="h-6 w-6 mr-1" />
-                  Drivers {20}
+                  <Users className="h-6 w-6 text-secondary" />
+                  Drivers ({filteredDrivers.length})
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
-                  //   onClick={}
+                  onClick={() => setActiveModal("driverFilter")}
                   className="hover:border-secondary/50 btn-ripple"
                 >
                   <Filter className="h-4 w-4 mr-1" />
@@ -282,33 +283,9 @@ function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 rounded-lg bg-background-secondary border border-border/30 hover:border-secondary/30 transition-smooth hover-elevate">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12 avatar-hover">
-                    <AvatarImage>
-                      <AvatarFallback className="gradient-secondary text-secondary-foreground">
-                        {"Usama Elareeny"
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </AvatarImage>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h3 className="font-semibold">Usama Elareeny</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="" className="">
-                        Availible
-                      </Badge>
-                      {true && (
-                        <span className="text-xs text-muted-foreground">
-                          Route:{" "}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {filteredDrivers.map((driver) => (
+                <DriverCard key={driver.id} driver={driver} routes={routes} />
+              ))}
             </CardContent>
           </Card>
         </div>

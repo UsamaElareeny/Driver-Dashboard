@@ -28,7 +28,7 @@ interface RouteCardProps {
   setActiveModal: (modal: string | null) => void;
 }
 
-export function RouteCard({
+export default function RouteCard({
   route,
   getDriverById,
   handleUnassignDriver,
