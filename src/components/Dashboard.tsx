@@ -9,7 +9,7 @@ import DriverCard from "./DriverCard";
 import DriverForm from "./DriverForm";
 import RouteForm from "./RouteForm";
 import CalendarView from "./CalendarView";
-
+import AssignmentModal from "./AssignmentModal";
 interface Driver {
   id: string;
   name: string;
@@ -310,6 +310,26 @@ function Dashboard() {
             drivers={drivers}
             routes={routes}
             onClose={() => setActiveModal(null)}
+          />
+        )}
+        {activeModal === "assignment" && selectedRouteForAssignment && (
+          <AssignmentModal
+            route={selectedRouteForAssignment}
+            availableDrivers={drivers.filter(
+              (d) => d.availability === "Available"
+            )}
+            onAssign={(driverId) => {
+              if (selectedRouteForAssignment.assignedDriverId) {
+                handleUnassignDriver(selectedRouteForAssignment.id);
+              }
+              handleAssignDriver(selectedRouteForAssignment.id, driverId);
+              setActiveModal(null);
+              setSelectedRouteForAssignment(null);
+            }}
+            onClose={() => {
+              setActiveModal(null);
+              setSelectedRouteForAssignment(null);
+            }}
           />
         )}
       </div>
