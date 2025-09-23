@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { X, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,42 +30,31 @@ export default function CalendarView({
   drivers,
   routes,
   onClose,
-}: CalendarViewProps): JSX.Element {
+}: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<"week" | "month">("week");
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      month: "long",
-      year: "numeric",
-    });
-  };
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   const getDaysInWeek = (date: Date) => {
     const start = new Date(date);
     start.setDate(date.getDate() - date.getDay());
-
-    const days: Date[] = [];
-    for (let i = 0; i < 7; i++) {
+    return Array.from({ length: 7 }, (_, i) => {
       const day = new Date(start);
       day.setDate(start.getDate() + i);
-      days.push(day);
-    }
-    return days;
+      return day;
+    });
   };
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-
-    const days: Date[] = [];
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(new Date(year, month, i));
-    }
-    return days;
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    return Array.from(
+      { length: lastDay },
+      (_, i) => new Date(year, month, i + 1)
+    );
   };
 
   const navigateCalendar = (direction: "prev" | "next") => {
@@ -80,19 +69,11 @@ export default function CalendarView({
     setCurrentDate(newDate);
   };
 
-  const getDriversForDay = (date: Date) => {
-    return drivers
-      .filter((driver) => driver.availability === "Available")
-      .slice(0, 2);
-  };
-
-  const getRoutesForDay = (date: Date) => {
-    return routes.filter((route) => route.assignedDriverId).slice(0, 3);
-  };
+  const getRoutesForDay = (date: Date) =>
+    routes.filter((route) => route.assignedDriverId).slice(0, 3);
 
   const renderWeekView = () => {
     const days = getDaysInWeek(currentDate);
-
     return (
       <div className="grid grid-cols-7 gap-4">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
@@ -147,7 +128,6 @@ export default function CalendarView({
 
   const renderMonthView = () => {
     const days = getDaysInMonth(currentDate);
-
     return (
       <div className="grid grid-cols-7 gap-2">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayName) => (
@@ -160,7 +140,6 @@ export default function CalendarView({
         ))}
         {days.map((day) => {
           const routesForDay = getRoutesForDay(day);
-
           return (
             <div
               key={day.toISOString()}
@@ -202,24 +181,13 @@ export default function CalendarView({
         </Button>
 
         <div className="space-y-6">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full gradient-warning mb-4">
-              <Calendar className="h-6 w-6 text-warning-foreground" />
-            </div>
-            <h2 className="text-2xl font-bold">Driver Schedule Calendar</h2>
-            <p className="text-muted-foreground">
-              View and manage driver availability
-            </p>
-          </div>
-
-          {/* Calendar Controls */}
+          {/* Controls */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigateCalendar("prev")}
-                className="hover:border-primary/50"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -230,18 +198,15 @@ export default function CalendarView({
                 variant="outline"
                 size="sm"
                 onClick={() => navigateCalendar("next")}
-                className="hover:border-primary/50"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-
             <div className="flex gap-2">
               <Button
                 variant={viewMode === "week" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("week")}
-                className="btn-ripple"
               >
                 Week
               </Button>
@@ -249,69 +214,14 @@ export default function CalendarView({
                 variant={viewMode === "month" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("month")}
-                className="btn-ripple"
               >
                 Month
               </Button>
             </div>
           </div>
 
-          {/* Calendar Grid */}
           <div className="bg-background/50 rounded-lg p-4 border border-border/30">
             {viewMode === "week" ? renderWeekView() : renderMonthView()}
-          </div>
-
-          {/* Legend */}
-          <div className="flex items-center justify-center gap-6 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full gradient-success"></div>
-              <span>Available</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full gradient-warning"></div>
-              <span>Assigned</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full gradient-danger"></div>
-              <span>Unavailable</span>
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 rounded-lg bg-success/10 border border-success/20 hover:border-success/40 transition-smooth hover-elevate cursor-pointer group">
-              <div className="text-2xl font-bold text-success group-hover:scale-110 transition-transform">
-                {drivers.filter((d) => d.availability === "Available").length}
-              </div>
-              <div className="text-sm text-muted-foreground group-hover:text-success/80 transition-colors">
-                Available Drivers
-              </div>
-              <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-success/70">
-                Ready for assignment
-              </div>
-            </div>
-            <div className="text-center p-4 rounded-lg bg-warning/10 border border-warning/20 hover:border-warning/40 transition-smooth hover-elevate cursor-pointer group">
-              <div className="text-2xl font-bold text-warning group-hover:scale-110 transition-transform">
-                {drivers.filter((d) => d.availability === "Assigned").length}
-              </div>
-              <div className="text-sm text-muted-foreground group-hover:text-warning/80 transition-colors">
-                Assigned Drivers
-              </div>
-              <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-warning/70">
-                Currently on routes
-              </div>
-            </div>
-            <div className="text-center p-4 rounded-lg bg-primary/10 border border-primary/20 hover:border-primary/40 transition-smooth hover-elevate cursor-pointer group">
-              <div className="text-2xl font-bold text-primary group-hover:scale-110 transition-transform">
-                {routes.filter((r) => r.assignedDriverId).length}
-              </div>
-              <div className="text-sm text-muted-foreground group-hover:text-primary/80 transition-colors">
-                Active Routes
-              </div>
-              <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-primary/70">
-                Routes with drivers
-              </div>
-            </div>
           </div>
         </div>
       </div>
