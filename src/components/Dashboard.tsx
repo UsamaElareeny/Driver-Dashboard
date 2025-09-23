@@ -163,6 +163,31 @@ function Dashboard() {
       );
     }
   };
+
+  // New function to handle the type mismatch and provide a type-safe wrapper
+  const handleOpenModal = (modal: string | null) => {
+    // We explicitly check that the string is one of the valid modal names
+    const validModals = [
+      "driver",
+      "route",
+      "calendar",
+      "assignment",
+      "driverFilter",
+      null,
+    ];
+    if (validModals.includes(modal)) {
+      setActiveModal(
+        modal as
+          | "driver"
+          | "route"
+          | "calendar"
+          | "assignment"
+          | "driverFilter"
+          | null
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-6 overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -250,7 +275,8 @@ function Dashboard() {
                   getDriverById={getDriverById}
                   handleUnassignDriver={handleUnassignDriver}
                   setSelectedRouteForAssignment={setSelectedRouteForAssignment}
-                  setActiveModal={setActiveModal}
+                  // The handleOpenModal wrapper function is passed here to fix the type mismatch
+                  setActiveModal={handleOpenModal}
                 />
               ))}
             </CardContent>

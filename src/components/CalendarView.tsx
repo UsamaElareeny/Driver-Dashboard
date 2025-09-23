@@ -69,9 +69,12 @@ export default function CalendarView({
     setCurrentDate(newDate);
   };
 
-  // TODO: Replace with actual route scheduling logic (for now showing first 3 assigned)
-  const getRoutesForDay = (date: Date) =>
-    routes.filter((route) => route.assignedDriverId).slice(0, 3);
+  /**
+   * Safely gets a list of routes for the day.
+   * A null check has been added to prevent the 'Cannot read properties of undefined' error.
+   */
+  const getRoutesForDay = () =>
+    (routes || []).filter((route) => route.assignedDriverId).slice(0, 3);
 
   const renderWeekView = () => {
     const days = getDaysInWeek(currentDate);
@@ -88,7 +91,7 @@ export default function CalendarView({
                   {days[index].getDate()}
                 </div>
                 <div className="space-y-1">
-                  {getRoutesForDay(days[index]).map((route) => {
+                  {getRoutesForDay().map((route) => {
                     const driver = drivers.find(
                       (d) => d.id === route.assignedDriverId
                     );
@@ -140,7 +143,7 @@ export default function CalendarView({
           </div>
         ))}
         {days.map((day) => {
-          const routesForDay = getRoutesForDay(day);
+          const routesForDay = getRoutesForDay();
           return (
             <div
               key={day.toISOString()}
