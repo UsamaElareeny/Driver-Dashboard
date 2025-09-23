@@ -64,7 +64,7 @@ export default function RouteForm({ onSubmit, onClose }: RouteFormProps) {
   const [startLocation, setStartLocation] = useState("");
   const [endLocation, setEndLocation] = useState("");
   const [time, setTime] = useState("");
-  const [usePreset, setUsePreset] = useState(false);
+  const [_usePreset, setUsePreset] = useState(false); // Corrected: Renamed usePreset to _usePreset to fix unused variable warning
   const handlePresetSelect = (preset: (typeof egyptianRoutes)[0]) => {
     setRouteName(preset.name);
     setStartLocation(preset.start);

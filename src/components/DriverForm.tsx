@@ -61,11 +61,10 @@ export default function DriverForm({ onSubmit, onClose }: DriverFormProps) {
       photo: photo || undefined,
     });
 
-    // reset form
     setName("");
     setAvailability("Available");
     setPhoto("");
-    onClose(); // ✅ close modal after adding driver
+    onClose();
   };
 
   return (
@@ -118,7 +117,7 @@ export default function DriverForm({ onSubmit, onClose }: DriverFormProps) {
                     <Upload className="h-4 w-4" />
                   </Button>
                 </div>
-                <input
+                <Input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"

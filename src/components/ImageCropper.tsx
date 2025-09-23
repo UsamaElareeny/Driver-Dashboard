@@ -16,7 +16,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [cropPosition, setCropPosition] = useState({ x: 0, y: 0 });
+  const [cropPosition] = useState({ x: 0, y: 0 }); // Corrected: removed setCropPosition
   const [cropSize] = useState(200); // Fixed circular crop size
   const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
   const [imageScale, setImageScale] = useState(1);
@@ -72,7 +72,8 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({
     ctx.stroke();
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = () => {
+    // Corrected: removed unused 'e' parameter
     setIsDragging(true);
   };
 
