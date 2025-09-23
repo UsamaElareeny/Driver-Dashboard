@@ -10,6 +10,8 @@ import DriverForm from "./DriverForm";
 import RouteForm from "./RouteForm";
 import CalendarView from "./CalendarView";
 import AssignmentModal from "./AssignmentModal";
+import DriverFilterModal from "./DriverFilterModal";
+
 interface Driver {
   id: string;
   name: string;
@@ -82,22 +84,21 @@ function Dashboard() {
   >(null);
   const [selectedRouteForAssignment, setSelectedRouteForAssignment] =
     useState<Route | null>(null);
-
   const [driverFilters, setDriverFilters] = useState<{
-    availibility: string[];
+    availability: string[];
     searchTerm: string;
-  }>({ availibility: [], searchTerm: "" });
+  }>({ availability: [], searchTerm: "" });
 
   const filteredDrivers = drivers.filter((d) => {
     const matchesSearch =
       d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       d.name.toLowerCase().includes(driverFilters.searchTerm.toLowerCase());
 
-    const matchesAvailibility =
-      driverFilters.availibility.length === 0 ||
-      driverFilters.availibility.includes(d.availability);
+    const matchesAvailability =
+      driverFilters.availability.length === 0 ||
+      driverFilters.availability.includes(d.availability);
 
-    return matchesSearch && matchesAvailibility;
+    return matchesSearch && matchesAvailability;
   });
 
   const filteredRoutes = routes.filter((r) => {
@@ -330,6 +331,13 @@ function Dashboard() {
               setActiveModal(null);
               setSelectedRouteForAssignment(null);
             }}
+          />
+        )}
+        {activeModal === "driverFilter" && (
+          <DriverFilterModal
+            currentFilters={driverFilters}
+            onApplyFilters={setDriverFilters}
+            onClose={() => setActiveModal(null)}
           />
         )}
       </div>
