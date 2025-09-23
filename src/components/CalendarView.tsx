@@ -69,6 +69,7 @@ export default function CalendarView({
     setCurrentDate(newDate);
   };
 
+  // TODO: Replace with actual route scheduling logic (for now showing first 3 assigned)
   const getRoutesForDay = (date: Date) =>
     routes.filter((route) => route.assignedDriverId).slice(0, 3);
 
@@ -221,6 +222,7 @@ export default function CalendarView({
             </div>
           </div>
 
+          {/* Calendar Body */}
           <div className="bg-background/50 rounded-lg p-4 border border-border/30">
             {viewMode === "week" ? renderWeekView() : renderMonthView()}
           </div>

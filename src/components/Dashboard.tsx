@@ -164,38 +164,35 @@ function Dashboard() {
     }
   };
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent">
-              Driver Dashboard
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Manage drivers and routes with beautiful, modern interface
-            </p>
-          </div>
+          <h1 className="text-4xl font-bold gradient-primary bg-clip-text text-transparent">
+            Driver Dashboard
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Manage drivers and routes with beautiful, modern interface
+          </p>
         </div>
+
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 justify-center">
           <Button
             onClick={() => setActiveModal("driver")}
             className="gradient-primary btn-ripple hover-elevate shadow-primary"
-            variant="default"
             size="lg"
           >
-            <Plus className="mr-2 h-5 w-5"></Plus>
+            <Plus className="mr-2 h-5 w-5" />
             Add Driver
           </Button>
 
           <Button
             className="gradient-secondary btn-ripple hover-elevate shadow-secondary"
             onClick={() => setActiveModal("route")}
-            variant="secondary"
             size="lg"
           >
-            <Route className="mr-2 h-5 w-5"></Route>
+            <Route className="mr-2 h-5 w-5" />
             Add Route
           </Button>
 
@@ -205,45 +202,36 @@ function Dashboard() {
             size="lg"
             className="hover-elevate transition-smooth border-primary/20 hover:border-primary/40"
           >
-            <Calendar className="mr-2 h-5 w-5"></Calendar>
+            <Calendar className="mr-2 h-5 w-5" />
             Calendar View
           </Button>
         </div>
+
         {/* Search & Filters */}
         <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Search drives and routes..."
+              placeholder="Search drivers and routes..."
               className="pl-10 bg-card border-border/50 focus:border-primary/50 transition-smooth"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="flex gap-2">
-            <Button
-              variant={filterStatus === "All" ? "default" : "outline"}
-              className="btn-ripple"
-              onClick={() => setFilterStatus("All")}
-            >
-              All
-            </Button>
-            <Button
-              variant={filterStatus === "Assigned" ? "default" : "outline"}
-              className="btn-ripple"
-              onClick={() => setFilterStatus("Assigned")}
-            >
-              Assigned
-            </Button>
-            <Button
-              variant={filterStatus === "Unassigned" ? "default" : "outline"}
-              className="btn-ripple"
-              onClick={() => setFilterStatus("Unassigned")}
-            >
-              Unassigned
-            </Button>
+            {["All", "Assigned", "Unassigned"].map((status) => (
+              <Button
+                key={status}
+                variant={filterStatus === status ? "default" : "outline"}
+                className="btn-ripple"
+                onClick={() => setFilterStatus(status as typeof filterStatus)}
+              >
+                {status}
+              </Button>
+            ))}
           </div>
         </div>
+
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Routes */}
@@ -262,19 +250,12 @@ function Dashboard() {
                   getDriverById={getDriverById}
                   handleUnassignDriver={handleUnassignDriver}
                   setSelectedRouteForAssignment={setSelectedRouteForAssignment}
-                  setActiveModal={(
-                    modal:
-                      | "driver"
-                      | "route"
-                      | "calendar"
-                      | "assignment"
-                      | "driverFilter"
-                      | null
-                  ) => setActiveModal(modal)}
+                  setActiveModal={setActiveModal}
                 />
               ))}
             </CardContent>
           </Card>
+
           {/* Drivers */}
           <Card className="gradient-card hover-elevate shadow-elegant border-border/50">
             <CardHeader>
@@ -301,6 +282,7 @@ function Dashboard() {
             </CardContent>
           </Card>
         </div>
+
         {/* Modals */}
         {activeModal === "driver" && (
           <DriverForm
