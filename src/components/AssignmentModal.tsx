@@ -33,7 +33,7 @@ export default function AssignmentModal({
   availableDrivers,
   onAssign,
   onClose,
-}): AssignmentModalProps {
+}: AssignmentModalProps) {
   const [selectedDriverId, setSelectedDriverId] = useState<string>("");
   const [isAssigning, setIsAssigning] = useState(false);
 
@@ -46,6 +46,7 @@ export default function AssignmentModal({
     onAssign(selectedDriverId);
     setIsAssigning(false);
   };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 modal-backdrop flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl p-6 w-full max-w-lg shadow-elegant modal-content relative">
