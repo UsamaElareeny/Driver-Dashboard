@@ -262,7 +262,15 @@ function Dashboard() {
                   getDriverById={getDriverById}
                   handleUnassignDriver={handleUnassignDriver}
                   setSelectedRouteForAssignment={setSelectedRouteForAssignment}
-                  setActiveModal={setActiveModal}
+                  setActiveModal={(
+                    modal:
+                      | "driver"
+                      | "route"
+                      | "calendar"
+                      | "assignment"
+                      | "driverFilter"
+                      | null
+                  ) => setActiveModal(modal)}
                 />
               ))}
             </CardContent>

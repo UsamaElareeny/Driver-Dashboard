@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -34,12 +34,12 @@ export default function CalendarView({
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<"week" | "month">("week");
 
-  const formatDate = (date: Date) =>
-    date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const formatDate = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-  const getDaysInWeek = (date: Date) => {
-    const start = new Date(date);
-    start.setDate(date.getDate() - date.getDay());
+  const getDaysInWeek = (d: Date) => {
+    const start = new Date(d);
+    start.setDate(d.getDate() - d.getDay());
     return Array.from({ length: 7 }, (_, i) => {
       const day = new Date(start);
       day.setDate(start.getDate() + i);
@@ -47,9 +47,9 @@ export default function CalendarView({
     });
   };
 
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
+  const getDaysInMonth = (d: Date) => {
+    const year = d.getFullYear();
+    const month = d.getMonth();
     const lastDay = new Date(year, month + 1, 0).getDate();
     return Array.from(
       { length: lastDay },
@@ -202,6 +202,7 @@ export default function CalendarView({
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
+
             <div className="flex gap-2">
               <Button
                 variant={viewMode === "week" ? "default" : "outline"}
