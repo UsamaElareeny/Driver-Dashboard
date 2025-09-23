@@ -8,6 +8,7 @@ import RouteCard from "./RouteCard";
 import DriverCard from "./DriverCard";
 import DriverForm from "./DriverForm";
 import RouteForm from "./RouteForm";
+import CalendarView from "./CalendarView";
 
 interface Driver {
   id: string;
@@ -301,6 +302,13 @@ function Dashboard() {
         {activeModal === "route" && (
           <RouteForm
             onSubmit={handleAddRoute}
+            onClose={() => setActiveModal(null)}
+          />
+        )}
+        {activeModal === "calendar" && (
+          <CalendarView
+            drivers={drivers}
+            routes={routes}
             onClose={() => setActiveModal(null)}
           />
         )}

@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
+::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
 @layer base {
   :root {
     /* Modern gradient background system */
